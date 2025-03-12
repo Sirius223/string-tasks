@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Завдання з обробки рядків</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 5px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .result {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Завдання 1 -->
+    <div class="task">
+        <h3>1. Конвертація числа в текст</h3>
+        <input type="number" id="numberInput" min="10" max="99" placeholder="Введіть число 10-99">
+        <button onclick="convertNumber()">Конвертувати</button>
+        <div id="numberResult" class="result"></div>
+    </div>
+
+    <!-- Завдання 2 -->
+    <div class="task">
+        <h3>2. Перетворення в CamelCase</h3>
+        <input type="text" id="camelInput" placeholder="Введіть css-властивість">
+        <button onclick="convertToCamel()">Конвертувати</button>
+        <div id="camelResult" class="result"></div>
+    </div>
+
+    <!-- Завдання 3 -->
+    <div class="task">
+        <h3>3. Перетворення в Kebab-Case</h3>
+        <input type="text" id="kebabInput" placeholder="Введіть CamelCase">
+        <button onclick="convertToKebab()">Конвертувати</button>
+        <div id="kebabResult" class="result"></div>
+    </div>
+
+    <!-- Завдання 4 -->
+    <div class="task">
+        <h3>4. Калькулятор</h3>
+        <input type="text" id="calcInput" placeholder="Введіть приклад (напр. 3+5)">
+        <button onclick="calculate()">Обчислити</button>
+        <div id="calcResult" class="result"></div>
+    </div>
+
+    <!-- Завдання 5 -->
+    <div class="task">
+        <h3>5. Заміна формату дат</h3>
+        <textarea id="dateInput" rows="4" cols="50" placeholder="Введіть текст з датами"></textarea>
+        <button onclick="replaceDates()">Замінити дати</button>
+        <div id="dateResult" class="result"></div>
+    </div>
+
+    <script>
+        // Завдання 1
+        function convertNumber() {
+            const n = parseInt(document.getElementById('numberInput').value);
+            const result = numberToText(n);
+            document.getElementById('numberResult').innerHTML = result || "Невірне число!";
+        }
+
+        function numberToText(n) {
+            if (n < 10 || n > 99) return "";
+            
+            const units = ['', 'один', 'два', 'три', 'четыре', 'пять', 
+                         'шесть', 'семь', 'восемь', 'девять', 'десять',
+                         'одиннадцать', 'двенадцать', 'тринадцать', 
+                         'четырнадцать', 'пятнадцать', 'шестнадцать',
+                         'семнадцать', 'восемнадцать', 'девятнадцать'];
+            const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят',
+                        'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+            
+            if (n < 20) return units[n];
+            return (tens[Math.floor(n/10)] + ' ' + units[n % 10]).trim();
+        }
+
+        // Завдання 2
+        function convertToCamel() {
+            const input = document.getElementById('camelInput').value;
+            const result = input.split('-').map((word, i) => 
+                i === 0 ? word : word[0].toUpperCase() + word.slice(1)
+            ).join('');
+            document.getElementById('camelResult').textContent = result;
+        }
+
+        // Завдання 3
+        function convertToKebab() {
+            const input = document.getElementById('kebabInput').value;
+            const result = input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+            document.getElementById('kebabResult').textContent = result;
+        }
+
+        // Завдання 4
+        function calculate() {
+            const expr = document.getElementById('calcInput').value;
+            const match = expr.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
+            if (!match) {
+                document.getElementById('calcResult').textContent = "Невірний формат!";
+                return;
+            }
+            
+            const a = parseInt(match[1]), b = parseInt(match[3]);
+            const op = match[2];
+            let result;
+            
+            switch(op) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = b !== 0 ? a / b : 'Ділення на нуль!'; break;
+                default: result = 'Невідома операція';
+            }
+            document.getElementById('calcResult').textContent = result;
+        }
+
+        // Завдання 5
+        function replaceDates() {
+            const text = document.getElementById('dateInput').value;
+            const result = text.replace(/(\d{4})\/(\d{2})\/(\d{2})/g, '$3.$2.$1');
+            document.getElementById('dateResult').textContent = result;
+        }
+    </script>
+</body>
+</html>
