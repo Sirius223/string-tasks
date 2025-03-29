@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №3</title>
+</head>
+<body>
+    <h1>Лабораторна робота №3</h1>
+
+    <h2>Завдання 1: Функції</h2>
+    <input type="text" id="textInput" placeholder="Введіть текст">
+    <input type="number" id="fontSizeInput" placeholder="Розмір шрифту">
+    <button onclick="changeFontSize()">Змінити розмір</button>
+    <p id="textOutput"></p>
+
+    <h3>Таблиця зі слів</h3>
+    <textarea id="tableInput" placeholder="Введіть слова через кому"></textarea>
+    <button onclick="generateTable()">Створити таблицю</button>
+    <div id="tableOutput"></div>
+
+    <h3>Заголовки</h3>
+    <input type="number" id="headerCount" placeholder="Кількість заголовків">
+    <button onclick="createHeaders()">Створити заголовки</button>
+    <div id="headersOutput"></div>
+
+    <h3>Обробка параметрів</h3>
+    <textarea id="paramsInput" placeholder="Введіть числа і слова через кому"></textarea>
+    <button onclick="processParams()">Обробити</button>
+    <p id="paramsOutput"></p>
+
+    <h2>Завдання 2: Дата та час</h2>
+    <button onclick="showCurrentDate()">Показати поточну дату</button>
+    <p id="currentDate"></p>
+
+    <input type="text" id="dateInput" placeholder="Введіть дату (дд.мм.рррр, дд/мм/рррр, дд-мм-рррр)">
+    <button onclick="parseDate()">Обробити дату</button>
+    <p id="parsedDate"></p>
+
+    <script>
+        function changeFontSize() {
+            let text = document.getElementById('textInput').value;
+            let size = document.getElementById('fontSizeInput').value;
+            document.getElementById('textOutput').style.fontSize = size + 'px';
+            document.getElementById('textOutput').innerText = text;
+        }
+
+        function generateTable() {
+            let input = document.getElementById('tableInput').value;
+            let words = input.split(',');
+            let table = '<table border="1"><tr>' + words.map(word => `<td>${word.trim()}</td>`).join('') + '</tr></table>';
+            document.getElementById('tableOutput').innerHTML = table;
+        }
+
+        function createHeaders() {
+            let count = document.getElementById('headerCount').value;
+            let headers = '';
+            for (let i = 1; i <= count; i++) {
+                headers += `<h2>Header${i}</h2>`;
+            }
+            document.getElementById('headersOutput').innerHTML = headers;
+        }
+
+        function processParams() {
+            let input = document.getElementById('paramsInput').value.split(',');
+            let numbers = input.map(item => parseFloat(item)).filter(item => !isNaN(item));
+            let words = input.filter(item => isNaN(parseFloat(item))).map(item => item.trim());
+            let maxNumber = numbers.length ? Math.max(...numbers) : 'немає чисел';
+            let sumNumbers = numbers.reduce((acc, num) => acc + num, 0);
+            let sentence = words.join(' ');
+            document.getElementById('paramsOutput').innerHTML = `Максимальне число: ${maxNumber} або сума: ${sumNumbers}<br>Речення: ${sentence}`;
+        }
+
+        function showCurrentDate() {
+            let now = new Date();
+            let options = { year: 'numeric', month: 'long', day: 'numeric' };
+            let formattedDate = `Дата: ${now.toLocaleDateString('uk-UA', options)} року`;
+            let weekday = `День тижня: ${now.toLocaleDateString('uk-UA', { weekday: 'long' })}`;
+            let time = `Час: ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('currentDate').innerHTML = `${formattedDate}<br>${weekday}<br>${time}`;
+        }
+
+        function parseDate() {
+            let input = document.getElementById('dateInput').value;
+            let datePattern = /^(\d{2})[.\/\-](\d{2})[.\/\-](\d{4})$/;
+            let match = input.match(datePattern);
+            if (match) {
+                let date = new Date(match[3], match[2] - 1, match[1]);
+                let today = new Date();
+                let diff = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+                let result;
+                if (diff === 0) result = "Сьогодні";
+                else if (diff === 1) result = "Вчора";
+                else if (diff >= 2 && diff <= 6) result = `${diff} дні тому`;
+                else if (diff === 7) result = "Тиждень тому";
+                else if (diff >= 365) result = "Рік тому";
+                else result = `${match[3]}.${match[2]}.${match[1]}`;
+                document.getElementById('parsedDate').innerText = result;
+            } else {
+                document.getElementById('parsedDate').innerText = "Невірний формат дати";
+            }
+        }
+    </script>
+</body>
+</html>
